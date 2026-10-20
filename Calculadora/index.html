@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#1a1a2e"/>
+  <title>CalcSci</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="icon" href="icon.svg" type="image/svg+xml"/>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <span class="app-title">⚡ CalcSci</span>
+  <div class="topbar-right">
+    <select id="themeSelect" onchange="setTheme(this.value)">
+      <option value="dark">🌌 Nebula</option>
+      <option value="light">☀️ Light</option>
+      <option value="dracula">🧛 Dracula</option>
+      <option value="solarized">🌊 Solarized</option>
+    </select>
+    <button class="icon-btn" onclick="openModal('shortcutsModal')" title="Atalhos (F1)">⌨️</button>
+    <button class="icon-btn" id="installBtn" style="display:none" title="Instalar App">📲</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<nav class="tabs">
+  <button class="tab active" onclick="switchTab('calc')">🧮 Calc</button>
+  <button class="tab" onclick="switchTab('graph')">📈 Gráfico</button>
+  <button class="tab" onclick="switchTab('3d')">🌐 3D</button>
+  <button class="tab" onclick="switchTab('linear')">🔢 Sistemas</button>
+  <button class="tab" onclick="switchTab('matrix')">🟦 Matrizes</button>
+  <button class="tab" onclick="switchTab('comb')">🎲 Combinatória</button>
+  <button class="tab" onclick="switchTab('stats')">📊 Estatística</button>
+  <button class="tab" onclick="switchTab('history')">📋 Histórico</button>
+</nav>
+
+<!-- ═══════════════ TAB: CALCULADORA ═══════════════ -->
+<div id="tab-calc" class="tab-content active">
+  <div class="calculator">
+    <div class="display">
+      <div id="expression"></div>
+      <div id="result">0</div>
+    </div>
+    <div class="buttons">
+      <button class="btn fn" onclick="toggleMode()">DEG</button>
+      <button class="btn fn" onclick="inp('Math.PI')">π</button>
+      <button class="btn fn" onclick="inp('Math.E')">e</button>
+      <button class="btn fn" onclick="inp('Math.abs(')">|x|</button>
+      <button class="btn fn" onclick="inp('fact(')">n!</button>
+      <button class="btn clear" onclick="clearAll()">AC</button>
+
+      <button class="btn fn" onclick="inp('Math.sin(')">sin</button>
+      <button class="btn fn" onclick="inp('Math.cos(')">cos</button>
+      <button class="btn fn" onclick="inp('Math.tan(')">tan</button>
+      <button class="btn fn" onclick="inp('Math.log10(')">log</button>
+      <button class="btn fn" onclick="inp('Math.log(')">ln</button>
+      <button class="btn op" onclick="backspace()">⌫</button>
+
+      <button class="btn fn" onclick="inp('Math.asin(')">sin⁻¹</button>
+      <button class="btn fn" onclick="inp('Math.acos(')">cos⁻¹</button>
+      <button class="btn fn" onclick="inp('Math.atan(')">tan⁻¹</button>
+      <button class="btn fn" onclick="inp('Math.sqrt(')">√</button>
+      <button class="btn fn" onclick="inp('Math.cbrt(')">∛</button>
+      <button class="btn op" onclick="inp('%')">%</button>
+
+      <button class="btn fn" onclick="inp('Math.pow(10,')">10ˣ</button>
+      <button class="btn fn" onclick="inp('Math.pow(2,')">2ˣ</button>
+      <button class="btn fn" onclick="inp('Math.pow(Math.E,')">eˣ</button>
+      <button class="btn fn" onclick="inp('Math.pow(')">xʸ</button>
+      <button class="btn fn" onclick="inp('(1/(')">1/x</button>
+      <button class="btn op" onclick="inp('(')">(</button>
+
+      <button class="btn num" onclick="inp('7')">7</button>
+      <button class="btn num" onclick="inp('8')">8</button>
+      <button class="btn num" onclick="inp('9')">9</button>
+      <button class="btn op"  onclick="inp('/')">÷</button>
+      <button class="btn fn"  onclick="inpPow(2)">x²</button>
+      <button class="btn op"  onclick="inp(')')">)</button>
+
+      <button class="btn num" onclick="inp('4')">4</button>
+      <button class="btn num" onclick="inp('5')">5</button>
+      <button class="btn num" onclick="inp('6')">6</button>
+      <button class="btn op"  onclick="inp('*')">×</button>
+      <button class="btn fn"  onclick="inpPow(3)">x³</button>
+      <button class="btn op"  onclick="toggleSign()">±</button>
+
+      <button class="btn num" onclick="inp('1')">1</button>
+      <button class="btn num" onclick="inp('2')">2</button>
+      <button class="btn num" onclick="inp('3')">3</button>
+      <button class="btn op"  onclick="inp('-')">−</button>
+      <button class="btn fn"  onclick="inp('Math.log2(')">log₂</button>
+      <button class="btn fn"  onclick="memRecall()">MR</button>
+
+      <button class="btn num zero" onclick="inp('0')">0</button>
+      <button class="btn num" onclick="inputDot()">.</button>
+      <button class="btn eq"  onclick="calculate()">=</button>
+      <button class="btn op"  onclick="inp('+')">+</button>
+      <button class="btn fn"  onclick="memStore()">MS</button>
+      <button class="btn fn"  onclick="memClear()">MC</button>
+    </div>
+    <div class="calc-actions">
+      <button class="action-btn" onclick="exportLatex()">LaTeX</button>
+      <button class="action-btn" onclick="exportPDF()">PDF</button>
+      <button class="action-btn" onclick="sendToGraph()">→ Gráfico</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB: GRÁFICO 2D ═══════════════ -->
+<div id="tab-graph" class="tab-content">
+  <div class="graph-panel">
+    <div class="graph-controls">
+      <div class="graph-inputs">
+        <div class="fn-row" id="fnRows">
+          <div class="fn-entry">
+            <span class="fn-label">f(x) =</span>
+            <input class="fn-input" id="fn0" type="text" placeholder="sin(x)" value="sin(x)"/>
+            <input type="color" class="fn-color" id="fc0" value="#6c63ff"/>
+            <button class="icon-btn" onclick="addFnRow()">＋</button>
+          </div>
+        </div>
+        <div class="graph-range">
+          <label>x: <input id="xMin" type="number" value="-10" step="1"/></label>
+          <label>→ <input id="xMax" type="number" value="10" step="1"/></label>
+          <label>y: <input id="yMin" type="number" value="-10" step="1"/></label>
+          <label>→ <input id="yMax" type="number" value="10" step="1"/></label>
+        </div>
+      </div>
+      <div class="graph-btns">
+        <button class="action-btn" onclick="plotGraph()">Plotar</button>
+        <button class="action-btn" onclick="exportGraphPNG()">PNG</button>
+        <button class="action-btn" onclick="clearGraph()">Limpar</button>
+      </div>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="graphCanvas"></canvas>
+      <div id="graphTooltip" class="graph-tooltip"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB: GRÁFICO 3D ═══════════════ -->
+<div id="tab-3d" class="tab-content">
+  <div class="graph3d-panel">
+    <div class="graph3d-controls">
+      <div class="graph3d-fn-row">
+        <span class="fn-label">f(x,y) =</span>
+        <input id="fn3d" class="fn-input" type="text"
+               placeholder="sin(sqrt(x*x+y*y))"
+               value="sin(sqrt(x*x+y*y))"/>
+      </div>
+      <div class="graph3d-ranges">
+        <label>x: <input id="x3dMin" type="number" value="-5" step="1"/></label>
+        <label>→ <input id="x3dMax" type="number" value="5"  step="1"/></label>
+        <label>y: <input id="y3dMin" type="number" value="-5" step="1"/></label>
+        <label>→ <input id="y3dMax" type="number" value="5"  step="1"/></label>
+        <label>Segmentos: <input id="segs3d" type="number" value="60" min="10" max="150" step="10"/></label>
+        <label class="graph3d-check">
+          <input id="wireframe3d" type="checkbox"/> Wireframe
+        </label>
+      </div>
+      <div class="graph3d-btns">
+        <button class="action-btn" onclick="plot3D()">Plotar</button>
+        <button class="action-btn" onclick="resetCamera3D()">↺ Câmera</button>
+        <button class="action-btn" onclick="export3DPNG()">PNG</button>
+      </div>
+      <div id="result3d" class="graph3d-msg"></div>
+    </div>
+    <div id="canvas3dWrap" class="canvas3d-wrap"></div>
+    <div class="graph3d-legend">
+      <div class="legend-bar"></div>
+      <div class="legend-labels"><span>mín</span><span>máx</span></div>
+      <p class="graph3d-hint">🖱 Arrastar: rotacionar · Scroll: zoom · 📱 Touch: arrastar / pinçar</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB: SISTEMAS LINEARES ═══════════════ -->
+<div id="tab-linear" class="tab-content">
+  <div class="linear-panel">
+    <div class="linear-controls">
+      <label>Variáveis:
+        <select id="linSize" onchange="buildMatrix()">
+          <option value="2">2×2</option>
+          <option value="3" selected>3×3</option>
+          <option value="4">4×4</option>
+        </select>
+      </label>
+      <button class="action-btn" onclick="solveLinear()">Resolver</button>
+      <button class="action-btn" onclick="clearLinear()">Limpar</button>
+    </div>
+    <div id="matrixWrap"></div>
+    <div id="linearResult" class="linear-result"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB: MATRIZES ═══════════════ -->
+<div id="tab-matrix" class="tab-content">
+  <div class="matrix-module">
+    <div class="mat-section">
+      <div class="mat-header">
+        <span class="mat-title">Matriz A</span>
+        <div class="mat-dims">
+          <label>Linhas: <input id="matRowsA" type="number" min="1" max="6" value="3" onchange="buildMatA()"/></label>
+          <label>Colunas: <input id="matColsA" type="number" min="1" max="6" value="3" onchange="buildMatA()"/></label>
+        </div>
+      </div>
+      <div id="matGridA"></div>
+    </div>
+    <div class="mat-ops-row">
+      <button class="action-btn" onclick="matAdd()">A + B</button>
+      <button class="action-btn" onclick="matSub()">A − B</button>
+      <button class="action-btn" onclick="matMul()">A × B</button>
+      <button class="action-btn" onclick="matTranspose()">Aᵀ</button>
+      <button class="action-btn" onclick="matDet()">det(A)</button>
+      <button class="action-btn" onclick="matInverse()">A⁻¹</button>
+      <button class="action-btn" onclick="matRank()">posto(A)</button>
+      <button class="action-btn" onclick="clearMat()">Limpar</button>
+    </div>
+    <div class="mat-scalar-row">
+      <label>Escalar k: <input id="matScalarVal" type="number" step="any" value="2" placeholder="k"/></label>
+      <button class="action-btn" onclick="matScalar()">k × A</button>
+    </div>
+    <div class="mat-section">
+      <div class="mat-header">
+        <span class="mat-title">Matriz B</span>
+        <div class="mat-dims">
+          <label>Linhas: <input id="matRowsB" type="number" min="1" max="6" value="3" onchange="buildMatB()"/></label>
+          <label>Colunas: <input id="matColsB" type="number" min="1" max="6" value="3" onchange="buildMatB()"/></label>
+        </div>
+      </div>
+      <div id="matGridB"></div>
+    </div>
+    <div id="matResult" class="linear-result"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB: COMBINATÓRIA ═══════════════ -->
+<div id="tab-comb" class="tab-content">
+  <div class="comb-panel">
+    <div class="comb-inputs">
+      <label>n = <input id="combN" type="number" min="0" max="100" value="5" oninput="combCalc()"/></label>
+      <label>k = <input id="combK" type="number" min="0" max="100" value="2" oninput="combCalc()"/></label>
+    </div>
+    <div id="combResult"></div>
+    <div id="binomioWrap" class="binomio-wrap"></div>
+    <div id="pascalWrap" class="pascal-wrap"></div>
+    <div class="perm-rep-section">
+      <p class="mat-op-label">Permutação com Repetição</p>
+      <div class="perm-rep-inputs">
+        <label>Total (n): <input id="permRepTotal" type="number" min="1" value="6"/></label>
+        <label>Grupos (n₁,n₂,…): <input id="permRepGroups" type="text" placeholder="2,2,2"/></label>
+        <button class="action-btn" onclick="calcPermRep()">Calcular</button>
+      </div>
+      <div id="permRepResult" class="linear-result" style="margin-top:8px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB: ESTATÍSTICA ═══════════════ -->
+<div id="tab-stats" class="tab-content">
+  <div class="stats-panel">
+    <p class="stats-hint">Insira os dados separados por vírgula, espaço ou ponto e vírgula.</p>
+    <textarea id="statsInput" class="stats-textarea"
+              placeholder="Ex: 4, 7, 13, 2, 1, 9, 7, 3"
+              rows="3" oninput="calcStats()"></textarea>
+    <div class="stats-btns">
+      <button class="action-btn" onclick="calcStats()">Calcular</button>
+      <button class="action-btn" onclick="clearStats()">Limpar</button>
+    </div>
+    <div id="statsResult"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB: HISTÓRICO ═══════════════ -->
+<div id="tab-history" class="tab-content">
+  <div class="history-panel">
+    <div class="history-header">
+      <span>Histórico de cálculos</span>
+      <div>
+        <button class="action-btn" onclick="exportHistoryLatex()">LaTeX</button>
+        <button class="action-btn" onclick="exportHistoryPDF()">PDF</button>
+        <button class="action-btn" onclick="clearHistory()">Limpar</button>
+      </div>
+    </div>
+    <ul id="historyList"></ul>
+    <p id="historyEmpty" class="empty-msg">Nenhum cálculo ainda.</p>
+  </div>
+</div>
+
+<!-- MODAL: LaTeX -->
+<div id="latexModal" class="modal-overlay" onclick="closeModal('latexModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>Exportar LaTeX</h3>
+    <textarea id="latexOutput" readonly rows="6"></textarea>
+    <div class="modal-actions">
+      <button class="action-btn" onclick="copyLatex()">Copiar</button>
+      <button class="action-btn" onclick="closeModal('latexModal')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ATALHOS -->
+<div id="shortcutsModal" class="modal-overlay" onclick="closeModal('shortcutsModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>⌨️ Atalhos de Teclado</h3>
+    <table class="shortcuts-table">
+      <tr><td><kbd>0–9</kbd></td><td>Dígitos</td></tr>
+      <tr><td><kbd>+ - * /</kbd></td><td>Operadores</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>Calcular</td></tr>
+      <tr><td><kbd>Backspace</kbd></td><td>Apagar</td></tr>
+      <tr><td><kbd>Escape</kbd></td><td>Limpar tudo</td></tr>
+      <tr><td><kbd>( )</kbd></td><td>Parênteses</td></tr>
+      <tr><td><kbd>s</kbd></td><td>sin(</td></tr>
+      <tr><td><kbd>c</kbd></td><td>cos(</td></tr>
+      <tr><td><kbd>t</kbd></td><td>tan(</td></tr>
+      <tr><td><kbd>l</kbd></td><td>log(</td></tr>
+      <tr><td><kbd>n</kbd></td><td>ln(</td></tr>
+      <tr><td><kbd>r</kbd></td><td>√(</td></tr>
+      <tr><td><kbd>p</kbd></td><td>π</td></tr>
+      <tr><td><kbd>e</kbd></td><td>e</td></tr>
+      <tr><td><kbd>g</kbd></td><td>Gráfico 2D</td></tr>
+      <tr><td><kbd>3</kbd></td><td>Gráfico 3D</td></tr>
+      <tr><td><kbd>h</kbd></td><td>Histórico</td></tr>
+      <tr><td><kbd>b</kbd></td><td>Estatística</td></tr>
+      <tr><td><kbd>F1</kbd></td><td>Atalhos</td></tr>
+    </table>
+    <div class="modal-actions">
+      <button class="action-btn" onclick="closeModal('shortcutsModal')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script src="graph.js"></script>
+<script src="graph3d.js"></script>
+<script src="linear.js"></script>
+<script src="matrix.js"></script>
+<script src="combinatorics.js"></script>
+<script src="stats.js"></script>
+</body>
+</html>
